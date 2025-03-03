@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: weather
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+provider:
+    url: ${PROVIDER_URL}
+    key: ${PROVIDER_API_KEY}
