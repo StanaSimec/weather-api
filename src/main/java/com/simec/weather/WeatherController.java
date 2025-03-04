@@ -1,6 +1,5 @@
 package com.simec.weather;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,6 @@ import java.time.Duration;
 @RestController
 public class WeatherController {
 
-    private static final Duration REDIS_EXPIRATION = Duration.ofMinutes(1);
     private final RedisTemplate<String, String> redisTemplate;
     private final WeatherRepository weatherRepository;
 
@@ -25,7 +23,7 @@ public class WeatherController {
     }
 
     @GetMapping(value = "/weather/api/{location}", produces = "application/json")
-    public ResponseEntity<String> getByLocation(@PathVariable String location) throws JsonProcessingException {
+    public ResponseEntity<String> getByLocation(@PathVariable String location) {
         String value = redisTemplate.opsForValue().get(location);
         if (value != null) {
             return ResponseEntity.status(HttpStatus.OK).body(value);
@@ -35,7 +33,7 @@ public class WeatherController {
 
         if (response.getStatusCode().isSameCodeAs(HttpStatus.OK)) {
             String body = response.getBody() != null ? response.getBody() : "No data was found for this location.";
-            redisTemplate.opsForValue().set(location, body, REDIS_EXPIRATION);
+            redisTemplate.opsForValue().set(location, body, Duration.ofHours(12));
             return ResponseEntity.status(HttpStatus.OK).body(body);
         }
 

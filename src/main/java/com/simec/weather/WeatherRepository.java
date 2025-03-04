@@ -14,11 +14,12 @@ public class WeatherRepository {
     private final String baseUrl;
 
     @Autowired
-    public WeatherRepository(RestTemplate restTemplate, @Value("${provider.key}") String key,
-                             @Value("${provider.url}") String url) {
+    public WeatherRepository(RestTemplate restTemplate,
+                             @Value("${provider.key}") String apiKey,
+                             @Value("${provider.url}") String baseUrl) {
         this.restTemplate = restTemplate;
-        this.apiKey = key;
-        this.baseUrl = url;
+        this.apiKey = apiKey;
+        this.baseUrl = baseUrl;
     }
 
     public ResponseEntity<String> findForLocation(String location) {
